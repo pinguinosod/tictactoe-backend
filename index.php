@@ -1,5 +1,7 @@
 <?php
 
+header('Content-Type: application/json');
+
 require_once('class-tictactoe.php');
 
 if ( isset($_GET['matrix']) ) {
@@ -11,13 +13,13 @@ else {
 
 $ttt = new Tictactoe( 'x', $matrix );
 
-$winner = 'noone';
+$winner = null;
 
-$x = $y = 0;
+$x = $y = null;
 
 if ( isset($_GET['x'], $_GET['y']) ) {
-    $x = intval( $_GET['x'] );
-    $y = intval( $_GET['y'] );
+    $x = intval( $_GET['x'] ) - 1;
+    $y = intval( $_GET['y'] ) - 1;
 
     if (!$ttt->checkWin()) { // if the game isn't finished already
 
@@ -42,21 +44,10 @@ if ( isset($_GET['x'], $_GET['y']) ) {
 $result =   [ 
                 'player' => $ttt->getPlayerChar(),
                 'computer' => $ttt->getComputerChar(),
+                'x' => $x + 1,
+                'y' => $y + 1,
                 'matrix' => $ttt->getMatrix(),
                 'winner'=> $winner 
             ];
 
-echo '<pre>'.json_encode($result, JSON_PRETTY_PRINT).'</pre>';
-
-?>
-
-<form action='./' method='get'>
-    <input type='number' min='0' max='2' name='x' value='<?=$x?>'>
-    <input type='number' min='0' max='2' name='y' value='<?=$y?>'>
-    <input type='hidden' name='matrix' value='<?=json_encode($ttt->getMatrix())?>'>
-    <input type='submit' value='submit'>
-</form>
-
-<form action='./' method='get'>
-    <input type='submit' value='reset'>
-</form>
+echo json_encode($result, JSON_PRETTY_PRINT);

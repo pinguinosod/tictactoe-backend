@@ -19,9 +19,9 @@ class Tictactoe
   static function generateEmptyMatrix():array {
     $matrix = [[]];
 
-    for($x = 0; $x < 3; $x++) {
-      for($y = 0; $y < 3; $y++) {
-        $matrix[$x][$y] = 0;
+    for($y = 0; $y < 3; $y++) {
+      for($x = 0; $x < 3; $x++) {
+        $matrix[$y][$x] = 0;
       }
     }
 
@@ -29,20 +29,20 @@ class Tictactoe
   }
 
   public function mark(int $x, int $y ):bool {
-    if ($this->matrix[$x][$y] !== 0) {
+    if ($this->matrix[$y][$x] !== 0) {
       return false;
     }
     else {
-      $this->matrix[$x][$y] = $this->playerChar;
+      $this->matrix[$y][$x] = $this->playerChar;
       return true;
     }
   }
 
   public function computerMark():bool {
-    for($x = 0; $x < count($this->matrix); $x++) {
-      for($y = 0; $y < count($this->matrix[$x]); $y++) {
-        if ($this->matrix[$x][$y] === 0) {
-          $this->matrix[$x][$y] = $this->computerChar;
+    for($y = 0; $y < count($this->matrix); $y++) {
+      for($x = 0; $x < count($this->matrix[$y]); $x++) {
+        if ($this->matrix[$y][$x] === 0) {
+          $this->matrix[$y][$x] = $this->computerChar;
           return true;
         }
       }
