@@ -5,14 +5,17 @@ class Tictactoe
   private $matrix;
   private $playerChar;
   private $computerChar;
+  private $difficulty;
 
-  public function __construct( string $playerChar, array $matrix ) {
+  public function __construct( string $playerChar, array $matrix, int $difficulty = 2 ) {
 
     $this->playerChar = $playerChar;
 
     $this->computerChar = $this->playerChar == 'x' ? 'o' : 'x';
 
     $this->matrix = $matrix;
+
+    $this->difficulty = $difficulty;
 
   }
 
@@ -39,14 +42,38 @@ class Tictactoe
   }
 
   public function computerMark():bool {
-    for($y = 0; $y < count($this->matrix); $y++) {
-      for($x = 0; $x < count($this->matrix[$y]); $x++) {
-        if ($this->matrix[$y][$x] === 0) {
+
+    switch( $this->difficulty ) {
+      case 1: // simplest (just mark the next empty point)
+        for($y = 0; $y < count($this->matrix); $y++) {
+          for($x = 0; $x < count($this->matrix[$y]); $x++) {
+            if ($this->matrix[$y][$x] === 0) {
+              $this->matrix[$y][$x] = $this->computerChar;
+              return true;
+            }
+          }
+        }
+      break;
+
+      case 2: // dumb (rand)
+        $emptyCoords = [];
+        for($y = 0; $y < count($this->matrix); $y++) {
+          for($x = 0; $x < count($this->matrix[$y]); $x++) {
+            if ($this->matrix[$y][$x] === 0) {
+              $emptyCoords[] = [$y,$x];
+            }
+          }
+        }
+        if (count($emptyCoords) > 0) {
+          $rnd = rand ( 0 , count($emptyCoords)-1 );
+          $y = $emptyCoords[$rnd][0];
+          $x = $emptyCoords[$rnd][1];
           $this->matrix[$y][$x] = $this->computerChar;
           return true;
         }
-      }
+      break;
     }
+    
     return false;
   }
 
@@ -112,5 +139,9 @@ class Tictactoe
 
   public function getComputerChar():string {
     return $this->computerChar;
+  }
+
+  public function getDifficulty():int {
+    return $this->difficulty;
   }
 }

@@ -47,7 +47,8 @@ $result =   [
                 'x' => $x + 1,
                 'y' => $y + 1,
                 'matrix' => $ttt->getMatrix(),
-                'winner'=> $winner 
+                'winner'=> $winner,
+                'difficulty' => $ttt->getDifficulty()
             ];
 
 echo json_encode($result, JSON_PRETTY_PRINT);
