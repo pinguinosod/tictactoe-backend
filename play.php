@@ -1,7 +1,7 @@
 <?php
 
-if ( isset($_GET['x'], $_GET['y'], $_GET['matrix']) ) {
-    $json = file_get_contents('https://phpinguino.herokuapp.com/tictactoe/?x='.intval($_GET['x']).'&y='.intval($_GET['y']).'&matrix='.$_GET['matrix']);
+if ( isset($_GET['x'], $_GET['y'], $_GET['d'], $_GET['matrix']) ) {
+    $json = file_get_contents('https://phpinguino.herokuapp.com/tictactoe/?x='.intval($_GET['x']).'&y='.intval($_GET['y']).'&d='.intval($_GET['d']).'&matrix='.$_GET['matrix']);
 }
 else {
     $json = file_get_contents('https://phpinguino.herokuapp.com/tictactoe/');
@@ -60,6 +60,7 @@ tr:nth-child(1) > td, tr:nth-child(2) td {
         Enter coordinates:<br>
         x: <input type='number' min='1' max='3' name='x' value='<?=$x?>'>
         y: <input type='number' min='1' max='3' name='y' value='<?=$y?>'>
+        <input type='hidden' name='d' value='3'>
         <input type='hidden' name='matrix' value='<?=json_encode($matrix)?>'>
         <input type='submit' value='submit' <?=$submitDisabled?>>
     </form>

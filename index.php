@@ -11,7 +11,12 @@ else {
     $matrix = Tictactoe::generateEmptyMatrix();
 }
 
-$ttt = new Tictactoe( 'x', $matrix );
+$difficulty = 2;
+if ( isset($_GET['d']) ) {
+    $difficulty = intval( $_GET['d'] );
+}
+
+$ttt = new Tictactoe( 'x', $matrix, $difficulty );
 
 $winner = null;
 

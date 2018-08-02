@@ -72,6 +72,36 @@ class Tictactoe
           return true;
         }
       break;
+
+      case 3: // this should be smarter (not done yet)
+        $emptyCoords = [];
+        for($y = 0; $y < count($this->matrix); $y++) {
+          for($x = 0; $x < count($this->matrix[$y]); $x++) {
+            if ($this->matrix[$y][$x] === 0) {
+              $emptyCoords[] = [$y,$x];
+            }
+          }
+        }
+        if (count($emptyCoords) > 0) {
+          if (count($emptyCoords) == 8) { // player moved once
+            if ($this->matrix[1][1] === $this->playerChar) { // he started at middle
+              $this->matrix[0][0] = $this->computerChar; // we play bottom left
+              return true;
+            }
+            else {
+              $this->matrix[1][1] = $this->computerChar; // we play middle
+              return true;
+            }
+          }
+          else { // just rand
+            $rnd = rand ( 0 , count($emptyCoords)-1 );
+            $y = $emptyCoords[$rnd][0];
+            $x = $emptyCoords[$rnd][1];
+            $this->matrix[$y][$x] = $this->computerChar;
+            return true;
+          }
+        }
+      break;
     }
     
     return false;
