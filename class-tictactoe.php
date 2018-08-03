@@ -41,6 +41,30 @@ class Tictactoe
     }
   }
 
+  private function playRand(): bool {
+
+    $emptyCoords = [];
+    for($y = 0; $y < count($this->matrix); $y++) {
+      for($x = 0; $x < count($this->matrix[$y]); $x++) {
+        if ($this->matrix[$y][$x] === 0) {
+          $emptyCoords[] = [$y,$x];
+        }
+      }
+    }
+
+    if (count($emptyCoords) > 0) {
+      $rnd = rand ( 0 , count($emptyCoords)-1 );
+      $y = $emptyCoords[$rnd][0];
+      $x = $emptyCoords[$rnd][1];
+      $this->matrix[$y][$x] = $this->computerChar;
+      return true;
+    }
+    else { 
+      return false;
+    }
+
+  }
+
   public function computerMark():bool {
 
     switch( $this->difficulty ) {
@@ -56,34 +80,36 @@ class Tictactoe
       break;
 
       case 2: // dumb (rand)
-        $emptyCoords = [];
-        for($y = 0; $y < count($this->matrix); $y++) {
-          for($x = 0; $x < count($this->matrix[$y]); $x++) {
-            if ($this->matrix[$y][$x] === 0) {
-              $emptyCoords[] = [$y,$x];
-            }
-          }
-        }
-        if (count($emptyCoords) > 0) {
-          $rnd = rand ( 0 , count($emptyCoords)-1 );
-          $y = $emptyCoords[$rnd][0];
-          $x = $emptyCoords[$rnd][1];
-          $this->matrix[$y][$x] = $this->computerChar;
-          return true;
-        }
+        return $this->playRand();
       break;
 
       case 3: // this should be smarter (not done yet)
+
         $emptyCoords = [];
+        $playerCoords = [];
+        $computerCoords = [];
+
+        // fill coords
         for($y = 0; $y < count($this->matrix); $y++) {
           for($x = 0; $x < count($this->matrix[$y]); $x++) {
+
             if ($this->matrix[$y][$x] === 0) {
               $emptyCoords[] = [$y,$x];
             }
+            elseif ($this->matrix[$y][$x] === $this->playerChar) {
+              $playerCoords[] = [$y,$x];
+            }
+            elseif ($this->matrix[$y][$x] === $this->computerChar) {
+              $computerCoords[] = [$y,$x];
+            }
+
           }
         }
+
         if (count($emptyCoords) > 0) {
-          if (count($emptyCoords) == 8) { // player moved once
+
+          if (count($playerCoords) == 1) { // player moved once
+
             if ($this->matrix[1][1] === $this->playerChar) { // he started at middle
               $this->matrix[0][0] = $this->computerChar; // we play bottom left
               return true;
@@ -92,14 +118,50 @@ class Tictactoe
               $this->matrix[1][1] = $this->computerChar; // we play middle
               return true;
             }
+
           }
-          else { // just rand
-            $rnd = rand ( 0 , count($emptyCoords)-1 );
-            $y = $emptyCoords[$rnd][0];
-            $x = $emptyCoords[$rnd][1];
-            $this->matrix[$y][$x] = $this->computerChar;
-            return true;
+          elseif (count($playerCoords) == 2) { // player moved twice
+            
+            if ($playerCoords[0][0] === $playerCoords[1][0]) { // both on same Y axis
+
+              $y = $playerCoords[0][0];
+              $x = 3 - $playerCoords[0][1] - $playerCoords[1][1]; // $x = 3 - firstX - secondX
+
+              if ($this->matrix[$y][$x] === 0) { // if its empty, we block him
+                $this->matrix[$y][$x] = $this->computerChar;
+                return true;
+              }
+
+            }
+            elseif ($playerCoords[0][1] === $playerCoords[1][1]) { // both on same X axis
+
+              $y = 3 - $playerCoords[0][0] - $playerCoords[1][0]; // $x = 3 - firstX - secondX
+              $x = $playerCoords[0][1];
+
+              if ($this->matrix[$y][$x] === 0) { // if its empty, we block him
+                $this->matrix[$y][$x] = $this->computerChar;
+                return true;
+              }
+
+            }
+            elseif ($this->matrix[1][1] === $this->playerChar) { // he got the middle
+
+              if ($this->matrix[2][0] === $this->playerChar) { // and he got top left
+                $this->matrix[0][2] = $this->computerChar; // we block bottom right
+                return true;
+              }
+              elseif ($this->matrix[0][2] === $this->playerChar) { // and he got bottom right
+                $this->matrix[2][0] = $this->computerChar; // we block top left
+                return true;
+              }
+
+            }
+
           }
+          
+          // if we got here, then just rand
+          return $this->playRand();
+
         }
       break;
     }
@@ -108,8 +170,6 @@ class Tictactoe
   }
 
   public function checkWin():bool {
-    // brute force
-    
     // horizontal
     if (    $this->matrix[0][0] === $this->matrix[1][0]
          && $this->matrix[0][0] === $this->matrix[2][0]
@@ -174,4 +234,5 @@ class Tictactoe
   public function getDifficulty():int {
     return $this->difficulty;
   }
+
 }
