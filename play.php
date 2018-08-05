@@ -1,9 +1,8 @@
 <?php
 
-if ( isset($_GET['x'], $_GET['y'], $_GET['d'], $_GET['matrix']) ) {
+if (isset($_GET['x'], $_GET['y'], $_GET['d'], $_GET['matrix'])) {
     $json = file_get_contents('https://phpinguino.herokuapp.com/tictactoe/?x='.intval($_GET['x']).'&y='.intval($_GET['y']).'&d='.intval($_GET['d']).'&matrix='.$_GET['matrix']);
-}
-else {
+} else {
     $json = file_get_contents('https://phpinguino.herokuapp.com/tictactoe/');
 }
 
